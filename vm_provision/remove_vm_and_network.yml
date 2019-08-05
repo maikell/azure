@@ -1,0 +1,28 @@
+---
+ - hosts: localhost
+   # https://docs.microsoft.com/en-us/azure-stack/user/azure-stack-vm-sizes
+
+   tasks:
+     - name: include vars
+       include_vars:
+        file: vars/main.yml
+
+     - name: Remove the VM {{ az_vm_name }} and all resources that were autocreated
+       azure_rm_virtualmachine:
+        resource_group: "{{ az_resource_name }}"
+        name: "{{ az_vm_name }}"
+        remove_on_absent: all_autocreated
+        state: absent
+
+     - name: Delete network interface
+       azure_rm_networkinterface:
+        resource_group: "{{ az_resource_name }}"
+        name: "{{ az_nic_name }}"
+        state: absent   
+
+     - name: Delete public ip {{ az_public_ip_name }}
+       azure_rm_publicipaddress:
+        resource_group: "{{ az_resource_name }}"
+        name: "{{ az_public_ip_name }}"
+        state: absent
+

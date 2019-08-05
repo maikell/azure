@@ -18,7 +18,7 @@
         az_ip_fact: "{{ pubfacts.ansible_facts.azure_publicipaddresses.0.properties.ipAddress }}"
         az_fqdn: "{{ pubfacts.ansible_facts.azure_publicipaddresses.0.properties.dnsSettings.fqdn }}"   
 
-     - name: Create VM 
+     - name: Create VM {{ az_vm_name }}
        azure_rm_virtualmachine:
         vm_size: "{{ az_vm_size_development }}"
         resource_group: "{{ az_resource_name }}"
@@ -41,9 +41,18 @@
         port: 22
         host: "{{ az_fqdn }}"
         search_regex: OpenSSH
-        delay: 5
+        delay: 0
        connection: local
 
+     - name: create hostfile for Ansible so we invoke other Ansible scripts
+       lineinfile:
+        path: ../hosts
+        line: "{{ az_vm_name }} ansible_host={{ az_fqdn }}"
+        create: yes
+        state: present 
+
      - debug:
-        msg: system is ready and can be connected on port 22 with FQDN "{{ az_fqdn }}"
+        msg: system is ready and can be connected on port 22 with FQDN {{ az_fqdn }}
       
+
+        

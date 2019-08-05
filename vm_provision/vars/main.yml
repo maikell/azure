@@ -1,16 +1,18 @@
 ---
+# SSH settings
+# paste ssh public in az_ssh_key_data
+az_admin_username: "maikel"
+az_ssh_key_data: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqrXVBObRJVswVPFVkDaXMBkmTaLGJbO/EHS0L6wE6lZMfBfpZ5GCTiYXUz5e7pllBYC/ttCb5DdFI71H8TmGC2IbxUCUQJ5FAAVUH7tA593aqWXraDLuyJ8qF9dVG/AsW3Ih4S+HVYh7pF0/QZ6jqUAwqGF8FwvAC+xbyQ7bdrAjNkdTfvHwJK1n01zUl8giE6xED/H1r2X4xmsBgxLFyVWu3MWzggnUSxygi2j0wlazoPnksGXwqFbnL70X1szN9U6F+uMGi5rvoa7cIndQlyjl5vPj8+vaO3S2aUA4YjJ18HNp+/p0ZXFnRONJxZS0NKQzJSREWYW0m2FdOold/"
+az_ssh_path: /home/maikel/.ssh/authorized_keys
+
 # VM settings 
 az_vm_image: "CentOS" # az vm image list
 az_vm_name: "dev-vm"
 az_vm_publish: "OpenLogic"
-az_vm_size_development: "Standard_A0"  
+az_vm_size_development: "Standard_A1"  # https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-previous-gen
 az_vm_sku: "7.5"
 az_vm_version: "latest"
-az_admin_username: "maikel"
 az_domain_name: "development"
-# paste ssh public in az_ssh_key_data
-az_ssh_key_data: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqrXVBObRJVswVPFVkDaXMBkmTaLGJbO/EHS0L6wE6lZMfBfpZ5GCTiYXUz5e7pllBYC/ttCb5DdFI71H8TmGC2IbxUCUQJ5FAAVUH7tA593aqWXraDLuyJ8qF9dVG/AsW3Ih4S+HVYh7pF0/QZ6jqUAwqGF8FwvAC+xbyQ7bdrAjNkdTfvHwJK1n01zUl8giE6xED/H1r2X4xmsBgxLFyVWu3MWzggnUSxygi2j0wlazoPnksGXwqFbnL70X1szN9U6F+uMGi5rvoa7cIndQlyjl5vPj8+vaO3S2aUA4YjJ18HNp+/p0ZXFnRONJxZS0NKQzJSREWYW0m2FdOold/"
-az_ssh_path: /home/maikel/.ssh/authorized_keys
 
 # Resource
 az_resource_location: "francecentral" # az acount list-location
