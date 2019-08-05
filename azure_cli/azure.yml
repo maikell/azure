@@ -1,0 +1,27 @@
+---
+ - hosts: localhost
+   become: yes
+   vars:
+
+   tasks:     
+    - name: Add azure repo GPG key
+      rpm_key:
+       state: present
+       key: https://packages.microsoft.com/keys/microsoft.asc
+      tags: azure
+
+    - name: Add azure CLI repo
+      yum_repository:
+       name: azure-cli
+       baseurl: https://packages.microsoft.com/yumrepos/azure-cli
+       description: azure-cli
+       file: azure-cli
+       gpgcheck: yes
+       enabled: yes
+      tags: azure  
+
+    - name: Install azure cli
+      package:
+       name: azure-cli
+       state: present
+      tags: azure  
