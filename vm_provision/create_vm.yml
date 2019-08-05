@@ -1,0 +1,49 @@
+---
+ - hosts: localhost
+   # https://docs.microsoft.com/en-us/azure-stack/user/azure-stack-vm-sizes
+
+   tasks:
+     - name: include vars
+       include_vars:
+        file: vars/main.yml
+
+     - name: Get facts for one Public IP
+       azure_rm_publicipaddress_facts:
+        resource_group: "{{ az_resource_name }}"
+        name: "{{ az_public_ip_name }}"
+       register: pubfacts 
+
+     - name: setting pubic ip variable to playbook fact
+       set_fact:
+        az_ip_fact: "{{ pubfacts.ansible_facts.azure_publicipaddresses.0.properties.ipAddress }}"
+        az_fqdn: "{{ pubfacts.ansible_facts.azure_publicipaddresses.0.properties.dnsSettings.fqdn }}"   
+
+     - name: Create VM 
+       azure_rm_virtualmachine:
+        vm_size: "{{ az_vm_size_development }}"
+        resource_group: "{{ az_resource_name }}"
+        name: "{{ az_vm_name }}"
+        admin_username: "{{ az_admin_username }}"
+        ssh_password_enabled: false
+        ssh_public_keys:
+         - path: "{{ az_ssh_path }}"
+           key_data: "{{ az_ssh_key_data }}"
+        virtual_network_name: "{{ az_virtual_network_name }}"
+        network_interfaces: "{{ az_nic_name }}"
+        image:
+         offer: "{{ az_vm_image }}"
+         publisher: "{{ az_vm_publish }}"
+         sku: "{{ az_vm_sku }}"
+         version: "{{ az_vm_version }}"
+     
+     - name: Wait 5 seconds for port 22 to become open and contain "OpenSSH"
+       wait_for:
+        port: 22
+        host: "{{ az_fqdn }}"
+        search_regex: OpenSSH
+        delay: 5
+       connection: local
+
+     - debug:
+        msg: system is ready and can be connected on port 22 with FQDN "{{ az_fqdn }}"
+      

@@ -1,0 +1,65 @@
+---
+ - hosts: localhost
+   # playbook slightly based on https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-cli-complete
+
+   tasks:
+     - name: include vars
+       include_vars:
+        file: vars/main.yml
+
+     - name: create resource group development
+       azure_rm_resourcegroup:
+        name: "{{ az_resource_name }}"
+        location: "{{ az_resource_location }}"
+
+     - name: Create a virtual network
+       azure_rm_virtualnetwork:
+        resource_group: "{{ az_resource_name }}"
+        name: "{{ az_virtual_network_name }}"
+        address_prefixes_cidr: "{{ az_network_cidr }}"
+
+     - name: Create a subnet
+       azure_rm_subnet:
+        resource_group: "{{ az_resource_name }}"
+        virtual_network_name: "{{ az_virtual_network_name }}"
+        name: "{{ az_subnet_name }}"
+        address_prefix_cidr: "{{ az_subnet }}"
+
+     - name: Create a public ip address
+       azure_rm_publicipaddress:
+        resource_group: "{{ az_resource_name }}"
+        name: "{{ az_public_ip_name }}"
+        allocation_method: static
+        domain_name: "{{ az_domain_name }}"
+       register: output_ip_address         
+       
+       #this function isn't and can't be made idempotent. Known issue
+     - name: Create security group and set the rules
+       azure_rm_securitygroup:
+        resource_group: "{{ az_resource_name }}"
+        name: "{{ az_security_group_name }}"
+        purge_rules: no
+        rules:
+         - name: 'Allow-defaults'
+           protocol: Tcp     
+           destination_port_range: "{{ az_public_ports }}"                
+           access: Allow
+           priority: 101
+           direction: Inbound
+
+     - name: Create a network interface using existing security group and public IP
+       azure_rm_networkinterface:
+        name: "{{ az_nic_name }}"
+        resource_group: "{{ az_resource_name }}"
+        virtual_network: "{{ az_virtual_network_name }}"
+        subnet_name: "{{ az_subnet_name }}"
+        security_group: "{{ az_security_group_name }}"
+        ip_configurations:
+         - name: "{{ az_public_ip_config_name }}"
+           public_ip_address_name: "{{ az_public_ip_name }}"
+           primary: True
+    
+     - name: Get Public ip what we just created
+       debug:
+        msg: "The public IP is {{ output_ip_address.state.ip_address }}."
+  
