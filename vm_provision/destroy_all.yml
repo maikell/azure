@@ -1,11 +1,12 @@
 ---
  - hosts: localhost
-   vars:
-    az_resource_name: development
-    az_resource_location: francecentral
 
    tasks:
-     - name: Destroy resource group development
+     - name: include vars
+       include_vars:
+        file: vars/main.yml
+           
+     - name: Destroy resource group "{{ az_resource_name }}"
        azure_rm_resourcegroup:
         name: "{{ az_resource_name }}"
         location: "{{ az_resource_location }}"

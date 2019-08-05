@@ -7,7 +7,7 @@
        include_vars:
         file: vars/main.yml
 
-     - name: create resource group development
+     - name: create resource group "{{ az_resource_name }}"
        azure_rm_resourcegroup:
         name: "{{ az_resource_name }}"
         location: "{{ az_resource_location }}"
