@@ -29,11 +29,13 @@
        azure_rm_publicipaddress:
         resource_group: "{{ az_resource_name }}"
         name: "{{ az_public_ip_name }}"
-        allocation_method: static
+        allocation_method: static # https://azure.microsoft.com/th-th/pricing/details/ip-addresses/
+                                  # The first five static IPs are not charged for reservation whether \
+                                  # associated with a running virtual machine’s network interface or Azure Load Balancer. 
         domain_name: "{{ az_domain_name }}"
        register: output_ip_address         
        
-       #this function isn't and can't be made idempotent. Known issue
+       # this function isn't and can't be made idempotent. Known issue
      - name: Create security group and set the rules
        azure_rm_securitygroup:
         resource_group: "{{ az_resource_name }}"

@@ -44,7 +44,7 @@
         delay: 0
        connection: local
 
-     - name: create hostfile for Ansible so we invoke other Ansible scripts
+     - name: create hostfile for Ansible so we can invoke other Ansible scripts
        lineinfile:
         path: ../hosts
         line: "{{ az_vm_name }} ansible_host={{ az_fqdn }}"
