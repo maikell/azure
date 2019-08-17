@@ -1,6 +1,6 @@
 ---
 # Ansible loads host file before. This script will fail first time. Execute
 # second time for successful deployment of Docker on the new vm 
- - include: vm_provision/create_resource_and_network.yml
- - include: vm_provision/create_vm.yml
- - include: docker/docker.yml
+ - import_playbook: vm_provision/create_resource_and_network.yml
+ - import_playbook: vm_provision/create_vm.yml
+ - import_playbook: docker/docker.yml

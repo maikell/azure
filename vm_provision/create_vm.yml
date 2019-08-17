@@ -51,6 +51,10 @@
         create: yes
         state: present 
 
+     - name: addhost dynamic the inventory in memory
+       add_host:
+        hostname: "{{ az_fqdn }}"
+     
      - debug:
         msg: system is ready and can be connected on port 22 with FQDN {{ az_fqdn }}
       
